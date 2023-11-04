@@ -8,9 +8,14 @@ import styles from './login.module.css';
 import cookie from 'js-cookie';
 import toast, { Toaster } from 'react-hot-toast';
 import api from '../api/api';
+import { logInSuccess } from '@/redux/features/authSlice';
+import {useDispatch} from "react-redux";
+import { AppDispatch } from '@/redux/store';
 
 const LoginPage: React.FC = () => {
     const [formData, setFormData] = React.useState({username: "", password: ""});
+    const dispatch = useDispatch<AppDispatch>();
+    const router = useRouter();
 
     const login = async () => {
         const {username, password} = formData;
@@ -35,8 +40,11 @@ const LoginPage: React.FC = () => {
                 
                 let response = await api.post("/users/token", data, {headers});
 
-                if(response.data.access_token)
+                if(response.data.access_token) {
                     cookie.set('token', response.data.access_token);
+                    dispatch(logInSuccess(username));
+                    router.push("/temp");
+                }
                 else if(response.data.message)
                     toast.success(response.data.message);
             }
