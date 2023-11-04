@@ -36,8 +36,11 @@ const LoginPage: React.FC = () => {
                     data,
                     {headers}
                 );
-                
-                cookie.set('token', response.data.access_token);
+
+                if(response.data.access_token)
+                    cookie.set('token', response.data.access_token);
+                else if(response.data.message)
+                    toast.success(response.data.message);
             }
             catch (err: any) {
                 toast.error(err.response.data.detail);
