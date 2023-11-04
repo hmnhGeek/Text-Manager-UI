@@ -7,6 +7,7 @@ import axios from 'axios';
 import styles from './login.module.css';
 import cookie from 'js-cookie';
 import toast, { Toaster } from 'react-hot-toast';
+import api from '../api/api';
 
 const LoginPage: React.FC = () => {
     const [formData, setFormData] = React.useState({username: "", password: ""});
@@ -31,11 +32,8 @@ const LoginPage: React.FC = () => {
                     'accept': 'application/json',
                     'Content-Type': 'application/x-www-form-urlencoded',
                 };
-
-                let response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE}/users/token`, 
-                    data,
-                    {headers}
-                );
+                
+                let response = await api.post("/users/token", data, {headers});
 
                 if(response.data.access_token)
                     cookie.set('token', response.data.access_token);
