@@ -3,12 +3,9 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import axios from 'axios';
 import styles from './login.module.css';
 import cookie from 'js-cookie';
 import toast, { Toaster } from 'react-hot-toast';
-import api from '../api/api';
-import { logInSuccess } from '@/redux/features/authSlice';
 import {useDispatch, useSelector} from "react-redux";
 import { login, logout } from '@/redux/actions/authActions';
 import { RootState, AppDispatch } from '@/redux/store';

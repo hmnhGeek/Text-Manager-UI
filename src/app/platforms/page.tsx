@@ -1,6 +1,5 @@
 "use client";
 
-import { useAppSelector } from "@/redux/store";
 import PlatformCard from "../components/PlatformCards/PlatformCard";
 import styles from './platforms.module.css';
 import { useEffect, useState } from "react";
@@ -9,7 +8,6 @@ import api from "../api/api";
 import { useRouter } from "next/navigation";
 
 const TempPage: React.FC = () => {
-    const username = useAppSelector(state => state.authReducer.value.username);
     const [platforms, setPlatforms] = useState([]);
     const router = useRouter();
 
