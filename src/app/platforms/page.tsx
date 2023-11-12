@@ -19,19 +19,23 @@ const PlatformsPage: React.FC = () => {
         else router.push("/login");
     }, []);
 
-    return (
-        <div className={styles.gridContainer}>
-            <h1>Available Platforms</h1>
-            <div className={styles.cardGrid}>
-                {platforms.map((platform) => (
-                <PlatformCard
-                    content={platform}
-                    onClick={() => console.log("Clicking")}
-                />
-                ))}
+    if(platforms && platforms.length > 0) {
+        return (
+            <div className={styles.gridContainer}>
+                <h1>Available Platforms</h1>
+                <div className={styles.cardGrid}>
+                    {platforms.map((platform) => (
+                    <PlatformCard
+                        content={platform}
+                        onClick={() => console.log("Clicking")}
+                    />
+                    ))}
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
+    
+    return null;
 }
 
 export default PlatformsPage;
