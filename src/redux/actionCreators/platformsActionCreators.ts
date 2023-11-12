@@ -1,4 +1,4 @@
-import { FETCH_AVAILABLE_PLATFORMS, FETCH_AVAILABLE_PLATFORMS_ERROR, FETCH_AVAILABLE_PLATFORMS_SUCCESS } from "../constants"
+import { FETCH_AVAILABLE_PLATFORMS, FETCH_AVAILABLE_PLATFORMS_ERROR, FETCH_AVAILABLE_PLATFORMS_SUCCESS } from "../constants/platformsConstants";
 
 export const fetchAvailablePlatformsStart = () => ({ type: FETCH_AVAILABLE_PLATFORMS });
 export const fetchAvailablePlatformsSuccess = (platforms: string[]) => ({ type: FETCH_AVAILABLE_PLATFORMS_SUCCESS, payload: platforms });

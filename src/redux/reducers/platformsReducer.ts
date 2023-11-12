@@ -1,5 +1,5 @@
-import { PlatfromsActionsTypes, FETCH_AVAILABLE_PLATFORMS, FETCH_AVAILABLE_PLATFORMS_SUCCESS, FETCH_AVAILABLE_PLATFORMS_ERROR } from "../constants";
-import { PlatformsState, platformsInitialState } from "../initialStates";
+import { PlatformsState, platformsInitialState } from "../initialStates/platformsInitialState";
+import { PlatfromsActionsTypes, FETCH_AVAILABLE_PLATFORMS, FETCH_AVAILABLE_PLATFORMS_SUCCESS, FETCH_AVAILABLE_PLATFORMS_ERROR } from "../constants/platformsConstants";
 
 const platformsReducer = (state: PlatformsState = platformsInitialState, action: PlatfromsActionsTypes) => {
     switch(action.type) {

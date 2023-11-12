@@ -1,6 +1,5 @@
-// src/redux/reducers/authReducer.ts
-import { AuthActionTypes, LOGIN_FAILURE, LOGIN_START, LOGIN_SUCCESS, LOGOUT_FAILURE, LOGOUT_START, LOGOUT_SUCCESS } from "../constants";
-import { AuthState, authInitialState } from "../initialStates";
+import { AuthState, authInitialState } from "../initialStates/authInitialState";
+import { AuthActionTypes, LOGIN_FAILURE, LOGIN_START, LOGIN_SUCCESS, LOGOUT_FAILURE, LOGOUT_START, LOGOUT_SUCCESS } from "../constants/authConstants";
 
 const authReducer = (state: AuthState = authInitialState, action: AuthActionTypes): AuthState => {
   switch (action.type) {
