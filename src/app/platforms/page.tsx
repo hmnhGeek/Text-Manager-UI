@@ -40,7 +40,7 @@ const TempPage: React.FC = () => {
 
     return (
         <div className={styles.gridContainer}>
-            <h1>Another Page</h1>
+            <h1>Available Platforms</h1>
             <div className={styles.cardGrid}>
                 {platforms.map((platform) => (
                 <PlatformCard
