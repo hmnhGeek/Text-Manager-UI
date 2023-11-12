@@ -9,12 +9,21 @@ import toast, { Toaster } from 'react-hot-toast';
 import {useDispatch, useSelector} from "react-redux";
 import { login, logout } from '@/redux/actions/authActions';
 import { RootState, AppDispatch } from '@/redux/store';
+import { connect } from 'react-redux';
 
-const LoginPage: React.FC = () => {
+interface LoginPageProps {
+    token: string | null;
+    isAuthenticated: boolean;
+    loading: boolean;
+    error: string | null;
+    login: (credentials: { username: string; password: string }) => void;
+    logout: () => void;
+}
+
+const LoginPage: React.FC<LoginPageProps> = props => {
     const [formData, setFormData] = React.useState({username: "", password: ""});
-    const { token, isAuthenticated, loading, error } = useSelector((state: RootState) => state.auth);
+    const { token, isAuthenticated, loading, error } = props;
     const router = useRouter();
-    const dispatch: AppDispatch = useDispatch();
 
     useEffect(() => {
         let apiError = cookie.get("apiError");
@@ -26,7 +35,7 @@ const LoginPage: React.FC = () => {
     }, []);
 
     const handleLogin = async () => {
-        await dispatch(login(formData));
+        await props.login(formData);
     };
 
     useEffect(() => {
@@ -90,4 +99,20 @@ const LoginPage: React.FC = () => {
     );
 };
 
-export default LoginPage;
+const mapStateToProps = (state: RootState) => {
+    return {
+        token: state.auth.token,
+        isAuthenticated: state.auth.isAuthenticated,
+        loading: state.auth.loading,
+        error: state.auth.error,
+    };
+};
+  
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        login: (credentials: { username: string; password: string }) => dispatch(login(credentials)),
+        logout: () => dispatch(logout()),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

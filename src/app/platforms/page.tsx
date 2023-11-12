@@ -7,15 +7,20 @@ import { useRouter } from "next/navigation";
 import { fetchAvailablePlatforms } from "@/redux/actions/platformsActions";
 import { RootState, AppDispatch } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
+import { connect } from "react-redux";
 
-const PlatformsPage: React.FC = () => {
+interface PlatformsPageProps {
+    token: string | null;
+    platforms: string[];
+    fetchAvailablePlatforms: (token: string) => void;
+}
+
+const PlatformsPage: React.FC<PlatformsPageProps> = props => {
     const router = useRouter();
-    const { token } = useSelector((state: RootState) => state.auth);
-    const { platforms } = useSelector((state: RootState) => state.platforms);
-    const dispatch = useDispatch<AppDispatch>();
+    const { token, platforms } = props;
 
     useEffect(() => {
-        if(token) dispatch(fetchAvailablePlatforms(token));
+        if(token) props.fetchAvailablePlatforms(token);
         else router.push("/login");
     }, []);
 
@@ -38,4 +43,17 @@ const PlatformsPage: React.FC = () => {
     return null;
 }
 
-export default PlatformsPage;
+const mapStateToProps = (state: RootState) => {
+    return {
+        token: state.auth.token,
+        platforms: state.platforms.platforms
+    }
+}
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        fetchAvailablePlatforms: (token: string) => dispatch(fetchAvailablePlatforms(token))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PlatformsPage);
