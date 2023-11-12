@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import axios from 'axios';
@@ -16,6 +16,15 @@ const LoginPage: React.FC = () => {
     const [formData, setFormData] = React.useState({username: "", password: ""});
     const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
+
+    useEffect(() => {
+        let apiError = cookie.get("apiError");
+
+        if(apiError) {
+            toast.error(apiError);
+            cookie.remove("apiError");
+        }
+    }, []);
 
     const login = async () => {
         const {username, password} = formData;
@@ -43,7 +52,7 @@ const LoginPage: React.FC = () => {
                 if(response.data.access_token) {
                     cookie.set('token', response.data.access_token);
                     dispatch(logInSuccess(username));
-                    router.push("/temp");
+                    router.push("/platforms");
                 }
                 else if(response.data.message)
                     toast.success(response.data.message);
