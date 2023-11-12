@@ -9,13 +9,15 @@ import cookie from 'js-cookie';
 import toast, { Toaster } from 'react-hot-toast';
 import api from '../api/api';
 import { logInSuccess } from '@/redux/features/authSlice';
-import {useDispatch} from "react-redux";
-import { AppDispatch } from '@/redux/store';
+import {useDispatch, useSelector} from "react-redux";
+import { login, logout } from '@/redux/actions/authActions';
+import { RootState, AppDispatch } from '@/redux/store';
 
 const LoginPage: React.FC = () => {
     const [formData, setFormData] = React.useState({username: "", password: ""});
-    const dispatch = useDispatch<AppDispatch>();
+    const { token, isAuthenticated, loading, error } = useSelector((state: RootState) => state.auth);
     const router = useRouter();
+    const dispatch: AppDispatch = useDispatch();
 
     useEffect(() => {
         let apiError = cookie.get("apiError");
@@ -26,42 +28,20 @@ const LoginPage: React.FC = () => {
         }
     }, []);
 
-    const login = async () => {
-        const {username, password} = formData;
+    const handleLogin = async () => {
+        await dispatch(login(formData));
+    };
 
-        if(username && password) {
-            try {
-                 // Define the data you want to send as an object
-                const data = {
-                    grant_type: '',
-                    username: username,
-                    password: password,
-                    scope: '',
-                    client_id: '',
-                    client_secret: '',
-                };
-                
-                // Define headers
-                const headers = {
-                    'accept': 'application/json',
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                };
-                
-                let response = await api.post("/users/token", data, {headers});
-
-                if(response.data.access_token) {
-                    cookie.set('token', response.data.access_token);
-                    dispatch(logInSuccess(username));
-                    router.push("/platforms");
-                }
-                else if(response.data.message)
-                    toast.success(response.data.message);
-            }
-            catch (err: any) {
-                toast.error(err.response.data.detail);
-            }
+    useEffect(() => {
+        if(token) {
+            router.push("/platforms");
         }
-    }
+    }, [token]);
+
+    useEffect(() => {
+        if(error)
+            toast.error(error);
+    }, [error]);
 
     return (
         <div className={styles.loginContainer}>
@@ -98,7 +78,7 @@ const LoginPage: React.FC = () => {
                     </div>
                     
                 </form>
-                <button onClick={login} className={styles.submitButton}>
+                <button onClick={handleLogin} className={styles.submitButton}>
                         Log In
                     </button>
                 <div className={styles.signupLink}>

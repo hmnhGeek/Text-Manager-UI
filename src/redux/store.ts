@@ -1,13 +1,30 @@
-import { configureStore } from "@reduxjs/toolkit";
-import authReducer from './features/authSlice';
-import {TypedUseSelectorHook, useSelector} from "react-redux";
+// src/redux/store.ts
+import { configureStore, Dispatch } from '@reduxjs/toolkit';
+import thunk, {ThunkMiddleware, ThunkAction} from 'redux-thunk';
+import authReducer from './reducers/authReducer';
+import { Action } from '@reduxjs/toolkit';
 
-export const store = configureStore({
-    reducer: {
-        authReducer
-    }
+// Custom Store type to include Dispatch with RootAction
+export interface CustomStore {
+  dispatch: Dispatch;
+}
+
+const store = configureStore({
+  reducer: {
+    auth: authReducer,
+    // Add other slices if needed
+  },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk as ThunkMiddleware),
+  // Add other configuration options as needed
 });
+
+export default store;
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+export type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  RootState,
+  unknown,
+  Action<string>
+>;
