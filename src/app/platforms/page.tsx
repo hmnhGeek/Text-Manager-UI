@@ -6,10 +6,12 @@ import styles from './platforms.module.css';
 import { useEffect, useState } from "react";
 import cookie from 'js-cookie';
 import api from "../api/api";
+import { useRouter } from "next/navigation";
 
 const TempPage: React.FC = () => {
     const username = useAppSelector(state => state.authReducer.value.username);
     const [platforms, setPlatforms] = useState([]);
+    const router = useRouter();
 
     const fetchAvailablePlatforms = async () => {
         try {
@@ -26,9 +28,9 @@ const TempPage: React.FC = () => {
         
             // Access response data here
             setPlatforms(response.data);
-        } catch (error) {
-            // Handle errors here
-            console.error('Error fetching data:', error);
+        } catch (error: any) {
+            cookie.set("apiError", error.response.data.detail);
+            router.push("/login");
         }
     }
 
