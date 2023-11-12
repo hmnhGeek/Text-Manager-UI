@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchAvailablePlatforms } from "@/redux/actions/platformsActions";
 import { RootState, AppDispatch } from "@/redux/store";
-import { useDispatch, useSelector } from "react-redux";
 import { connect } from "react-redux";
 
 interface PlatformsPageProps {

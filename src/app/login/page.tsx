@@ -6,7 +6,6 @@ import Link from 'next/link';
 import styles from './login.module.css';
 import cookie from 'js-cookie';
 import toast, { Toaster } from 'react-hot-toast';
-import {useDispatch, useSelector} from "react-redux";
 import { login, logout } from '@/redux/actions/authActions';
 import { RootState, AppDispatch } from '@/redux/store';
 import { connect } from 'react-redux';
