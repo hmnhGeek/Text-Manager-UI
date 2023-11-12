@@ -3,37 +3,20 @@
 import PlatformCard from "../components/PlatformCards/PlatformCard";
 import styles from './platforms.module.css';
 import { useEffect, useState } from "react";
-import cookie from 'js-cookie';
-import api from "../api/api";
 import { useRouter } from "next/navigation";
+import { fetchAvailablePlatforms } from "@/redux/actions/platformsActions";
+import { RootState, AppDispatch } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
 
-const TempPage: React.FC = () => {
-    const [platforms, setPlatforms] = useState([]);
+const PlatformsPage: React.FC = () => {
     const router = useRouter();
-
-    const fetchAvailablePlatforms = async () => {
-        try {
-            // Retrieve the token from cookies
-            const token = cookie.get('token');
-        
-            // Make the Axios request with the token in the headers
-            const response = await api.get(`/prompt_manager/get_all_platforms`, {
-              headers: {
-                'accept': 'application/json',
-                'Authorization': `Bearer ${token}`
-              }
-            });
-        
-            // Access response data here
-            setPlatforms(response.data);
-        } catch (error: any) {
-            cookie.set("apiError", error.response.data.detail);
-            router.push("/login");
-        }
-    }
+    const { token } = useSelector((state: RootState) => state.auth);
+    const { platforms } = useSelector((state: RootState) => state.platforms);
+    const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
-        fetchAvailablePlatforms();
+        if(token) dispatch(fetchAvailablePlatforms(token));
+        else router.push("/login");
     }, []);
 
     return (
@@ -42,7 +25,6 @@ const TempPage: React.FC = () => {
             <div className={styles.cardGrid}>
                 {platforms.map((platform) => (
                 <PlatformCard
-                    // key={platform.id}
                     content={platform}
                     onClick={() => console.log("Clicking")}
                 />
@@ -52,4 +34,4 @@ const TempPage: React.FC = () => {
     );
 }
 
-export default TempPage;
+export default PlatformsPage;

@@ -4,6 +4,12 @@ export interface AuthState {
     loading: boolean;
     error: string | null;
 }
+
+export interface PlatformsState {
+    loading: boolean;
+    error: string | null;
+    platforms: string[]
+}
   
 export const authInitialState: AuthState = {
     token: null,
@@ -11,3 +17,9 @@ export const authInitialState: AuthState = {
     loading: false,
     error: null,
 };
+
+export const platformsInitialState: PlatformsState = {
+    loading: false,
+    error: null,
+    platforms: []
+}
