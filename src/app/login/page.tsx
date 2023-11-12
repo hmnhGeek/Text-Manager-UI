@@ -43,7 +43,7 @@ const LoginPage: React.FC = () => {
                 if(response.data.access_token) {
                     cookie.set('token', response.data.access_token);
                     dispatch(logInSuccess(username));
-                    router.push("/temp");
+                    router.push("/platforms");
                 }
                 else if(response.data.message)
                     toast.success(response.data.message);

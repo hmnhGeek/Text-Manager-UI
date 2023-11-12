@@ -1,0 +1,51 @@
+/* components/PlatformCard.module.css */
+
+.string-card {
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  width: 100%;
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  overflow: hidden; /* Prevent text overflow */
+}
+
+/* Responsive styling */
+@media (min-width: 576px) {
+  .string-card {
+    width: 48%;
+  }
+}
+
+@media (min-width: 768px) {
+  .string-card {
+    width: 48%; /* Adjusted for larger screens */
+  }
+}
+
+@media (min-width: 992px) {
+  .string-card {
+    width: 48%; /* Adjusted for larger screens */
+  }
+}
+
+@media (min-width: 1200px) {
+  .string-card {
+    width: 48%; /* Adjusted for larger screens */
+  }
+}
+
+.string-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.string-card p {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+  max-width: 100%; /* Limit text width to prevent overflow */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Optional: Truncate text with ellipsis */
+}
