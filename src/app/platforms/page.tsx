@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { fetchAvailablePlatforms } from "@/redux/actions/platformsActions";
 import { RootState, AppDispatch } from "@/redux/store";
 import { connect } from "react-redux";
+import cookie from 'js-cookie';
 
 interface PlatformsPageProps {
     token: string | null;
@@ -20,7 +21,10 @@ const PlatformsPage: React.FC<PlatformsPageProps> = props => {
 
     useEffect(() => {
         if(token) props.fetchAvailablePlatforms(token);
-        else router.push("/login");
+        else {
+            cookie.set("apiError", "Please prove your identity!");
+            router.push("/login");
+        }
     }, []);
 
     if(platforms && platforms.length > 0) {
