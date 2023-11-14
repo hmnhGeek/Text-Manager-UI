@@ -3,18 +3,25 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import axios from 'axios';
 import styles from './login.module.css';
 import cookie from 'js-cookie';
 import toast, { Toaster } from 'react-hot-toast';
-import api from '../api/api';
-import { logInSuccess } from '@/redux/features/authSlice';
-import {useDispatch} from "react-redux";
-import { AppDispatch } from '@/redux/store';
+import { login, logout } from '@/redux/actions/authActions';
+import { RootState, AppDispatch } from '@/redux/store';
+import { connect } from 'react-redux';
 
-const LoginPage: React.FC = () => {
+interface LoginPageProps {
+    token: string | null;
+    isAuthenticated: boolean;
+    loading: boolean;
+    error: string | null;
+    login: (credentials: { username: string; password: string }) => void;
+    logout: () => void;
+}
+
+const LoginPage: React.FC<LoginPageProps> = props => {
     const [formData, setFormData] = React.useState({username: "", password: ""});
-    const dispatch = useDispatch<AppDispatch>();
+    const { token, isAuthenticated, loading, error } = props;
     const router = useRouter();
 
     useEffect(() => {
@@ -26,42 +33,20 @@ const LoginPage: React.FC = () => {
         }
     }, []);
 
-    const login = async () => {
-        const {username, password} = formData;
+    const handleLogin = async () => {
+        await props.login(formData);
+    };
 
-        if(username && password) {
-            try {
-                 // Define the data you want to send as an object
-                const data = {
-                    grant_type: '',
-                    username: username,
-                    password: password,
-                    scope: '',
-                    client_id: '',
-                    client_secret: '',
-                };
-                
-                // Define headers
-                const headers = {
-                    'accept': 'application/json',
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                };
-                
-                let response = await api.post("/users/token", data, {headers});
-
-                if(response.data.access_token) {
-                    cookie.set('token', response.data.access_token);
-                    dispatch(logInSuccess(username));
-                    router.push("/platforms");
-                }
-                else if(response.data.message)
-                    toast.success(response.data.message);
-            }
-            catch (err: any) {
-                toast.error(err.response.data.detail);
-            }
+    useEffect(() => {
+        if(token) {
+            router.push("/platforms");
         }
-    }
+    }, [token]);
+
+    useEffect(() => {
+        if(error)
+            toast.error(error);
+    }, [error]);
 
     return (
         <div className={styles.loginContainer}>
@@ -98,7 +83,7 @@ const LoginPage: React.FC = () => {
                     </div>
                     
                 </form>
-                <button onClick={login} className={styles.submitButton}>
+                <button onClick={handleLogin} className={styles.submitButton}>
                         Log In
                     </button>
                 <div className={styles.signupLink}>
@@ -113,4 +98,20 @@ const LoginPage: React.FC = () => {
     );
 };
 
-export default LoginPage;
+const mapStateToProps = (state: RootState) => {
+    return {
+        token: state.auth.token,
+        isAuthenticated: state.auth.isAuthenticated,
+        loading: state.auth.loading,
+        error: state.auth.error,
+    };
+};
+  
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        login: (credentials: { username: string; password: string }) => dispatch(login(credentials)),
+        logout: () => dispatch(logout()),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
