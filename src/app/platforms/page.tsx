@@ -8,16 +8,19 @@ import { fetchAvailablePlatforms } from "@/redux/actions/platformsActions";
 import { RootState, AppDispatch } from "@/redux/store";
 import { connect } from "react-redux";
 import cookie from 'js-cookie';
+import { setPlatformForPromptsLoading } from "@/redux/actions/titlesActions";
 
 interface PlatformsPageProps {
     token: string | null;
     platforms: string[];
+    settedPlatform: string | null;
     fetchAvailablePlatforms: (token: string) => void;
+    setPlatformForPromptsLoading: (platform: string) => void;
 }
 
 const PlatformsPage: React.FC<PlatformsPageProps> = props => {
     const router = useRouter();
-    const { token, platforms } = props;
+    const { token, platforms, settedPlatform } = props;
 
     useEffect(() => {
         if(token) props.fetchAvailablePlatforms(token);
@@ -27,6 +30,16 @@ const PlatformsPage: React.FC<PlatformsPageProps> = props => {
         }
     }, []);
 
+    useEffect(() => {
+        if(settedPlatform) {
+            router.push("/titles");
+        }
+    }, [settedPlatform]);
+
+    const setPlatform = (platform: string) => {
+        props.setPlatformForPromptsLoading(platform);
+    }
+
     if(platforms && platforms.length > 0) {
         return (
             <div className={styles.gridContainer}>
@@ -35,7 +48,7 @@ const PlatformsPage: React.FC<PlatformsPageProps> = props => {
                     {platforms.map((platform) => (
                     <PlatformCard
                         content={platform}
-                        onClick={() => console.log("Clicking")}
+                        onClick={() => setPlatform(platform)}
                     />
                     ))}
                 </div>
@@ -49,13 +62,15 @@ const PlatformsPage: React.FC<PlatformsPageProps> = props => {
 const mapStateToProps = (state: RootState) => {
     return {
         token: state.auth.token,
-        platforms: state.platforms.platforms
+        platforms: state.platforms.platforms,
+        settedPlatform: state.titles.platform
     }
 }
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
-        fetchAvailablePlatforms: (token: string) => dispatch(fetchAvailablePlatforms(token))
+        fetchAvailablePlatforms: (token: string) => dispatch(fetchAvailablePlatforms(token)),
+        setPlatformForPromptsLoading: (platform: string) => dispatch(setPlatformForPromptsLoading(platform)),
     }
 }
 
