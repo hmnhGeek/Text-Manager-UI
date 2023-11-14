@@ -1,6 +1,5 @@
 "use client";
 
-import PlatformCard from "../components/PlatformCards/PlatformCard";
 import styles from './titles.module.css';
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -9,6 +8,7 @@ import { RootState, AppDispatch } from "@/redux/store";
 import { connect } from "react-redux";
 import cookie from 'js-cookie';
 import { fetchTitlesFromPlatform } from "@/redux/actions/titlesActions";
+import CollapsibleCard from "../components/CollapsibleCard/CollapsibleCard";
 
 interface TitlesPageProps {
     token: string | null;
@@ -38,9 +38,9 @@ const TitlesPage: React.FC<TitlesPageProps> = props => {
                 <h1>Titles Available in {platform}</h1>
                 <div className={styles.cardGrid}>
                     {titles.map((title) => (
-                    <PlatformCard
-                        content={title}
-                        onClick={() => console.log(title)}
+                    <CollapsibleCard
+                        title={title}
+                        prompts={["abc", "def"]}
                     />
                     ))}
                 </div>
