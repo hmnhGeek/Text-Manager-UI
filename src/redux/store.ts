@@ -4,6 +4,7 @@ import thunk, {ThunkMiddleware, ThunkAction} from 'redux-thunk';
 import authReducer from './reducers/authReducer';
 import { Action } from '@reduxjs/toolkit';
 import platformsReducer from './reducers/platformsReducer';
+import titlesReducer from './reducers/titlesReducer';
 
 // Custom Store type to include Dispatch with RootAction
 export interface CustomStore {
@@ -13,7 +14,8 @@ export interface CustomStore {
 const store = configureStore({
   reducer: {
     auth: authReducer,
-    platforms: platformsReducer
+    platforms: platformsReducer,
+    titles: titlesReducer,
     // Add other slices if needed
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk as ThunkMiddleware),

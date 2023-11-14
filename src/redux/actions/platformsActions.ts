@@ -12,7 +12,6 @@ export const fetchAvailablePlatforms = (token: string) => {
                 'Authorization': `Bearer ${token}`
                 }
             });
-            console.log(response.data);
             dispatch(fetchAvailablePlatformsSuccess(response.data));
         } catch (error: any) {
             dispatch(fetchAvailablePlatformsError(error.response.data.detail));
