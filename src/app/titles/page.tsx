@@ -9,10 +9,11 @@ import { connect } from "react-redux";
 import cookie from 'js-cookie';
 import { fetchTitlesFromPlatform } from "@/redux/actions/titlesActions";
 import CollapsibleCard from "../components/CollapsibleCard/CollapsibleCard";
+import { TitlesType } from '@/redux/initialStates/titlesInitialState';
 
 interface TitlesPageProps {
     token: string | null;
-    titles: string[];
+    titles: TitlesType[];
     platform: string | null;
     fetchAvailablePlatforms: (token: string) => void;
     fetchTitlesFromPlatform: (token: string, platform: string) => void;
@@ -37,10 +38,10 @@ const TitlesPage: React.FC<TitlesPageProps> = props => {
             <div className={styles.gridContainer}>
                 <h1>Titles Available in {platform}</h1>
                 <div className={styles.cardGrid}>
-                    {titles.map((title) => (
+                    {titles.map((obj) => (
                     <CollapsibleCard
-                        title={title}
-                        prompts={["abc", "def"]}
+                        title={obj.title}
+                        prompts={obj.prompts}
                     />
                     ))}
                 </div>

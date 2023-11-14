@@ -20,7 +20,7 @@ export const fetchTitlesFromPlatform = (token: string, platform: string) => {
                 }
             });
             
-            let fetchedTitles = response.data.map((r: any) => r.title);
+            let fetchedTitles = response.data.map((r: any) => ({title: r.title, prompts: r.prompts}));
             dispatch(fetchTitlesFromPlatformSuccess(fetchedTitles));
         }
         catch (error: any) {

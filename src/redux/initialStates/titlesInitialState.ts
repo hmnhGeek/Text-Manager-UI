@@ -1,7 +1,12 @@
+export type TitlesType = {
+    title: string,
+    prompts: string[]
+}
+
 export interface TitlesState {
     platform: string | null;
     loading: boolean;
-    titles: string[];
+    titles: TitlesType[];
     error: string | null;
 }
 

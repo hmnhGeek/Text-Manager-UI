@@ -1,3 +1,5 @@
+import { TitlesType } from "../initialStates/titlesInitialState";
+
 export const START_PLATFORM_SETTING_PROCESS = 'START_PLATFORM_SETTING_PROCESS';
 export const START_PLATFORM_SETTING_PROCESS_SUCCESS = 'START_PLATFORM_SETTING_PROCESS_SUCCESS';
 
@@ -9,7 +11,7 @@ export type StartPlatformSettingProcessAction = { type: typeof START_PLATFORM_SE
 export type StartPlatformSettingProcessActionSuccessAction = { type: typeof START_PLATFORM_SETTING_PROCESS_SUCCESS, payload: string };
 
 export type FetchTitlesFromPlatformAction = { type: typeof FETCH_TITLES_FROM_PLATFORM };
-export type FetchTitlesFromPlatformSuccessAction = { type: typeof FETCH_TITLES_FROM_PLATFORM_SUCCESS, payload: string[] };
+export type FetchTitlesFromPlatformSuccessAction = { type: typeof FETCH_TITLES_FROM_PLATFORM_SUCCESS, payload: TitlesType[] };
 export type FetchTitlesFromPlatformErrorAction = { type: typeof FETCH_TITLES_FROM_PLATFORM_ERROR, payload: string };
 
 export type TitleActionsTypes = 
