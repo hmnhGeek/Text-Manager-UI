@@ -10,6 +10,7 @@ import cookie from 'js-cookie';
 import { fetchTitlesFromPlatform } from "@/redux/actions/titlesActions";
 import CollapsibleCard from "../components/CollapsibleCard/CollapsibleCard";
 import { TitlesType } from '@/redux/initialStates/titlesInitialState';
+import CustomBreadcrumbs from '../components/Breadcrumbs/CustomBreadcrumbs';
 
 interface TitlesPageProps {
     token: string | null;
@@ -37,6 +38,7 @@ const TitlesPage: React.FC<TitlesPageProps> = props => {
         return (
             <div className={styles.gridContainer}>
                 <h1>Titles Available in {platform}</h1>
+                <CustomBreadcrumbs />
                 <div className={styles.cardGrid}>
                     {titles.map((obj) => (
                     <CollapsibleCard
