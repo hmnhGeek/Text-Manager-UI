@@ -8,7 +8,7 @@ import { setPlatformForPromptsLoading } from '@/redux/actions/titlesActions';
 import { connect } from 'react-redux';
 
 interface CustomBreadcrumbsProps {
-  setPlatformForPromptsLoading: (platform: string | null) => void;
+  setPlatformForPromptsLoading: (platform: string) => void;
 }
 
 const CustomBreadcrumbs: React.FC<CustomBreadcrumbsProps> = props => {
@@ -19,7 +19,7 @@ const CustomBreadcrumbs: React.FC<CustomBreadcrumbsProps> = props => {
     const parts = event.target.href.split("/");
 
     const lastPart = parts[parts.length - 1];
-    props.setPlatformForPromptsLoading(null);
+    props.setPlatformForPromptsLoading("");
     router.push(`/${lastPart}`);
   }
 
@@ -37,8 +37,8 @@ const CustomBreadcrumbs: React.FC<CustomBreadcrumbsProps> = props => {
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
   return {
-      setPlatformForPromptsLoading: (platform: string | null) => dispatch(setPlatformForPromptsLoading(platform)),
+      setPlatformForPromptsLoading: (platform: string) => dispatch(setPlatformForPromptsLoading(platform)),
   }
 }
 
-export default connect(mapDispatchToProps)(CustomBreadcrumbs);
+export default connect(null, mapDispatchToProps)(CustomBreadcrumbs);
