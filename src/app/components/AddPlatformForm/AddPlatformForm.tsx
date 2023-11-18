@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './AddPlatfromForm.module.css';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { AppDispatch, RootState } from '@/redux/store';
+import { addPlatform } from '@/redux/actions/addPlatformActions';
+import { connect } from 'react-redux';
 
 const validationSchema = Yup.object(
   {
@@ -10,12 +13,12 @@ const validationSchema = Yup.object(
   }
 );
 
-// interface AddPlatformFormProps {
-//   onSubmit: (platformName: string, title: string) => void;
-//   onCancel: () => void;
-// }
+interface AddPlatformFormProps {
+  token: string | null,
+  addPlatform: (token: string, platformData: {platformName: string, title: string}) => void,
+}
 
-const AddPlatformForm = () => {
+const AddPlatformForm: React.FC<AddPlatformFormProps> = props => {
   const formik = useFormik(
     {
       initialValues: {
@@ -24,17 +27,11 @@ const AddPlatformForm = () => {
       },
       validationSchema: validationSchema,
       onSubmit: values => {
-        console.log(values);
+        if (props.token) props.addPlatform(props.token, values);
         formik.resetForm();
       }
     }
   );
-
-//   const handleSubmit = () => {
-//     onSubmit(platformName, title);
-//     setPlatformName('');
-//     setTitle('');
-//   };
 
   return (
     <div>
@@ -44,6 +41,7 @@ const AddPlatformForm = () => {
           <input
             type="text"
             value={formik.values.platformName}
+            name='platformName'
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className={`${styles.addinput} ${formik.touched.platformName && formik.errors.platformName ? styles.errorHighlight : ''}`}
@@ -59,6 +57,7 @@ const AddPlatformForm = () => {
           <input
             type="text"
             value={formik.values.title}
+            name='title'
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className={`${styles.addinput} ${formik.touched.platformName && formik.errors.platformName ? styles.errorHighlight : ''}`}
@@ -77,4 +76,16 @@ const AddPlatformForm = () => {
   );
 };
 
-export default AddPlatformForm;
+const mapStateToProps = (state: RootState) => {
+  return {
+    token: state.auth.token,
+  };
+};
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+  return {
+    addPlatform: (token: string, platformData: {platformName: string, title: string}) => dispatch(addPlatform(token, platformData)),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddPlatformForm);
