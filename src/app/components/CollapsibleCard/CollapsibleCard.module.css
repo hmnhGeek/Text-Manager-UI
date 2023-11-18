@@ -1,31 +1,14 @@
-/* styles/CollapsibleCard.module.css */
-.cardWrapper {
-  width: 100%;
-  box-sizing: border-box;
+/* CollapsibleCard.module.css */
+
+.collapsible-card {
+  margin-bottom: 10px; /* Add margin at the bottom to separate from other elements */
 }
 
-.card {
-  display: block;
-  width: 100%;
-  border: 1px solid #ccc;
-  margin-bottom: 16px;
-  cursor: pointer;
-  box-sizing: border-box; /* Ensure padding and border are included in the width */
+.collapsible-list {
+  /* list-style-type: none; */
+  padding: 0; /* Remove default padding */
 }
 
-.cardHeader {
-  padding: 16px;
-  background-color: #f0f0f0;
-}
-
-.cardContent {
-  padding: 16px;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.5s ease, opacity 0.5s ease; /* Add transitions for max-height and opacity */
-}
-
-.cardContent.visible {
-  max-height: 1000px; /* Set a value larger than your expected content height */
-  opacity: 1;
+.collapsible-list-item {
+  margin-left: 20px; /* Add left margin for indentation */
 }
