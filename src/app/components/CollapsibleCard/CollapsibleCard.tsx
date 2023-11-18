@@ -3,6 +3,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
+import styles from "./CollapsibleCard.module.css";
 
 interface AccordionProps {
   title: string;
@@ -11,7 +12,7 @@ interface AccordionProps {
 
 const CollapsibleCard: React.FC<AccordionProps> = ({ title, prompts }) => {
   return (
-    <div>
+    <div className={styles['collapsible-card']}>
       <Accordion>
         <AccordionSummary
         //   expandIcon={<ExpandMoreIcon />}
@@ -22,9 +23,9 @@ const CollapsibleCard: React.FC<AccordionProps> = ({ title, prompts }) => {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            <ul>
+            <ul className={styles['collapsible-list']}>
               {prompts.map((prompt, index) => (
-                <li key={index}>{prompt}</li>
+                <li key={index} className={styles['collapsible-list-item']}>{prompt}</li>
               ))}
             </ul>
           </Typography>
