@@ -1,16 +1,17 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import SpeedDial from '@mui/material/SpeedDial';
-import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
-import AddIcon from '@mui/icons-material/FileCopyOutlined';
 
-const actions = [
-  { icon: <AddIcon />, name: 'Add new platform' },
-];
+type CustomBreadcrumbsActionType = {
+    icon: React.ReactElement,
+    name: string
+};
 
 interface CustomSpeedDialProps {
-    className: string
+    className: string,
+    actions: CustomBreadcrumbsActionType[],
+    speedDialIcon: React.ReactElement
 };
 
 const CustomSppedDial: React.FC<CustomSpeedDialProps> = (props) => {
@@ -20,9 +21,9 @@ const CustomSppedDial: React.FC<CustomSpeedDialProps> = (props) => {
         <SpeedDial
             ariaLabel="SpeedDial basic example"
             sx={{ position: 'absolute', bottom: 16, right: 16 }}
-            icon={<SpeedDialIcon />}
+            icon={props.speedDialIcon}
         >
-            {actions.map((action) => (
+            {props.actions.map((action) => (
             <SpeedDialAction
                 key={action.name}
                 icon={action.icon}

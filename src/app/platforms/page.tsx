@@ -10,6 +10,8 @@ import { connect } from "react-redux";
 import cookie from 'js-cookie';
 import { setPlatformForPromptsLoading } from "@/redux/actions/titlesActions";
 import CustomSppedDial from "../components/CustomSpeedDial/CustomSpeedDial";
+import AddIcon from '@mui/icons-material/Add';
+import LayersIcon from '@mui/icons-material/Layers';
 
 interface PlatformsPageProps {
     token: string | null;
@@ -53,7 +55,18 @@ const PlatformsPage: React.FC<PlatformsPageProps> = props => {
                     />
                     ))}
                 </div>
-                <CustomSppedDial className={styles['custom-speed-dial']} />
+                <CustomSppedDial 
+                    className={styles['custom-speed-dial']} 
+                    actions={
+                        [
+                            {
+                                icon: <AddIcon />,
+                                name: "Add new platform"
+                            }
+                        ]
+                    }
+                    speedDialIcon={<LayersIcon />}
+                />
             </div>
         );
     }
