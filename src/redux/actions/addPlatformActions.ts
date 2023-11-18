@@ -1,5 +1,5 @@
 import { Dispatch } from "redux";
-import { addPlatformError, addPlatformStart, addPlatfromSuccess } from "../actionCreators/addPlatformActionCreators";
+import { addPlatformError, addPlatformStart, addPlatfromSuccess, reloadPlatformsPage } from "../actionCreators/addPlatformActionCreators";
 import api from "@/app/api/api";
 
 export const addPlatform = (token: string, platformData: {platformName: string, title: string}) => {
@@ -20,6 +20,7 @@ export const addPlatform = (token: string, platformData: {platformName: string, 
             
             const response = await api.post(`/prompt_manager/add_new_prompt_object`, payload, {headers})
             dispatch(addPlatfromSuccess(response.data));
+            dispatch(reloadPlatformsPage());
         }
         catch (error: any) {
             dispatch(addPlatformError(error.response.data.detail));

@@ -7,11 +7,13 @@ export type PlatformObjectType = {
 export interface AddPlatfromState {
     loading: boolean,
     error: string | null,
-    response: PlatformObjectType | null
+    response: PlatformObjectType | null,
+    reloadPlatformsPageToggleFlag: boolean,
 }
 
 export const addPlatformInitialState: AddPlatfromState = {
     loading: false,
     error: null,
-    response: null
+    response: null,
+    reloadPlatformsPageToggleFlag: false,
 }

@@ -14,8 +14,8 @@ const validationSchema = Yup.object(
 );
 
 interface AddPlatformFormProps {
-  token: string | null,
-  addPlatform: (token: string, platformData: {platformName: string, title: string}) => void,
+  token: string | null;
+  addPlatform: (token: string, platformData: {platformName: string, title: string}) => void;
 }
 
 const AddPlatformForm: React.FC<AddPlatformFormProps> = props => {

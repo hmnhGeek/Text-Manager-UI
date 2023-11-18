@@ -19,13 +19,14 @@ interface PlatformsPageProps {
     token: string | null;
     platforms: string[];
     settedPlatform: string | null;
+    reloadToggle: boolean;
     fetchAvailablePlatforms: (token: string) => void;
     setPlatformForPromptsLoading: (platform: string) => void;
 }
 
 const PlatformsPage: React.FC<PlatformsPageProps> = props => {
     const router = useRouter();
-    const { token, platforms, settedPlatform } = props;
+    const { token, platforms, settedPlatform, reloadToggle } = props;
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
@@ -34,7 +35,7 @@ const PlatformsPage: React.FC<PlatformsPageProps> = props => {
             cookie.set("apiError", "Please prove your identity!");
             router.push("/login");
         }
-    }, []);
+    }, [reloadToggle]);
 
     useEffect(() => {
         if(settedPlatform) {
@@ -85,7 +86,8 @@ const mapStateToProps = (state: RootState) => {
     return {
         token: state.auth.token,
         platforms: state.platforms.platforms,
-        settedPlatform: state.titles.platform
+        settedPlatform: state.titles.platform,
+        reloadToggle: state.addPlatform.reloadPlatformsPageToggleFlag
     }
 }
 
