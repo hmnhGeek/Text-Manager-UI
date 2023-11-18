@@ -5,7 +5,8 @@ import SpeedDialAction from '@mui/material/SpeedDialAction';
 
 type CustomBreadcrumbsActionType = {
     icon: React.ReactElement,
-    name: string
+    name: string,
+    onClick: (...agrs: any[]) => any
 };
 
 interface CustomSpeedDialProps {
@@ -28,6 +29,7 @@ const CustomSppedDial: React.FC<CustomSpeedDialProps> = (props) => {
                 key={action.name}
                 icon={action.icon}
                 tooltipTitle={action.name}
+                onClick={action.onClick}
             />
             ))}
         </SpeedDial>

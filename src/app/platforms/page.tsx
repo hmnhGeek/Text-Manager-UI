@@ -12,6 +12,8 @@ import { setPlatformForPromptsLoading } from "@/redux/actions/titlesActions";
 import CustomSppedDial from "../components/CustomSpeedDial/CustomSpeedDial";
 import AddIcon from '@mui/icons-material/Add';
 import LayersIcon from '@mui/icons-material/Layers';
+import CustomModal from "../components/CustomModal/CustomModal";
+import AddPlatformForm from "../components/AddPlatformForm/AddPlatformForm";
 
 interface PlatformsPageProps {
     token: string | null;
@@ -24,6 +26,7 @@ interface PlatformsPageProps {
 const PlatformsPage: React.FC<PlatformsPageProps> = props => {
     const router = useRouter();
     const { token, platforms, settedPlatform } = props;
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         if(token) props.fetchAvailablePlatforms(token);
@@ -61,12 +64,16 @@ const PlatformsPage: React.FC<PlatformsPageProps> = props => {
                         [
                             {
                                 icon: <AddIcon />,
-                                name: "Add new platform"
+                                name: "Add new platform",
+                                onClick: () => setIsModalOpen(true)
                             }
                         ]
                     }
                     speedDialIcon={<LayersIcon />}
                 />
+                <CustomModal title={"Add Platform"} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} >
+                    <AddPlatformForm />
+                </CustomModal>
             </div>
         );
     }
