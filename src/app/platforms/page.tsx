@@ -9,6 +9,7 @@ import { RootState, AppDispatch } from "@/redux/store";
 import { connect } from "react-redux";
 import cookie from 'js-cookie';
 import { setPlatformForPromptsLoading } from "@/redux/actions/titlesActions";
+import CustomSppedDial from "../components/CustomSpeedDial/CustomSpeedDial";
 
 interface PlatformsPageProps {
     token: string | null;
@@ -52,6 +53,7 @@ const PlatformsPage: React.FC<PlatformsPageProps> = props => {
                     />
                     ))}
                 </div>
+                <CustomSppedDial className={styles['custom-speed-dial']} />
             </div>
         );
     }
