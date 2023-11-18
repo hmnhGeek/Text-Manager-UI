@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './AddPlatfromForm.module.css';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { AppDispatch, RootState } from '@/redux/store';
 import { addPlatform } from '@/redux/actions/addPlatformActions';
 import { connect } from 'react-redux';
+import CircularProgress from '@mui/material/CircularProgress';
+import cookie from 'js-cookie';
 
 const validationSchema = Yup.object(
   {
@@ -15,6 +17,8 @@ const validationSchema = Yup.object(
 
 interface AddPlatformFormProps {
   token: string | null;
+  submitInProgress: boolean;
+  addPlatformError: string | null;
   addPlatform: (token: string, platformData: {platformName: string, title: string}) => void;
 }
 
@@ -32,6 +36,13 @@ const AddPlatformForm: React.FC<AddPlatformFormProps> = props => {
       }
     }
   );
+
+  useEffect(() => {
+    if(props.addPlatformError) {
+      cookie.set("apiError", props.addPlatformError);
+      window.location.replace("/login");
+    }
+  }, [props.addPlatformError]);
 
   return (
     <div>
@@ -68,8 +79,8 @@ const AddPlatformForm: React.FC<AddPlatformFormProps> = props => {
             )
           }
         </label>
-        <button type='submit' className={styles.submitButton}>
-          Submit
+        <button disabled={props.submitInProgress} type='submit' className={styles.submitButton}>
+          {props.submitInProgress ? <CircularProgress style={{ color: 'white' }} size={20} /> : "Submit"}
         </button>
       </form>
     </div>
@@ -79,6 +90,8 @@ const AddPlatformForm: React.FC<AddPlatformFormProps> = props => {
 const mapStateToProps = (state: RootState) => {
   return {
     token: state.auth.token,
+    submitInProgress: state.addPlatform.loading,
+    addPlatformError: state.addPlatform.error,
   };
 };
 

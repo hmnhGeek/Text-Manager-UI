@@ -27,6 +27,11 @@
     width: 100%;
     margin-top: 10px;
   }
+
+  .submitButton:disabled {
+    opacity: 0.5; /* Adjust the opacity or add other styles for the disabled state */
+    cursor: not-allowed;
+  }
   
   .cancelButton {
     background-color: #ff4444;
