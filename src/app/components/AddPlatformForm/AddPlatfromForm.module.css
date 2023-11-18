@@ -40,3 +40,12 @@
     margin-top: 10px;
   }
   
+  .error {
+    color: #dc3545; /* Bootstrap red color */
+    font-size: 14px;
+    margin-top: 5px;
+  }
+
+  .errorHighlight {
+    border: 2px solid #dc3545; /* Highlight color for errors, you can adjust this */
+  }
