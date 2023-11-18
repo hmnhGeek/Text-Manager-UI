@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { AppDispatch } from '@/redux/store';
 import { setPlatformForPromptsLoading } from '@/redux/actions/titlesActions';
 import { connect } from 'react-redux';
+import styles from './CustomBreadcrumbs.module.css';
 
 interface CustomBreadcrumbsProps {
   setPlatformForPromptsLoading: (platform: string) => void;
@@ -24,7 +25,7 @@ const CustomBreadcrumbs: React.FC<CustomBreadcrumbsProps> = props => {
   }
 
   return (
-    <div role="presentation" onClick={handleClick}>
+    <div className={styles['custom-breadcrumbs-container']} role="presentation" onClick={handleClick}>
       <Breadcrumbs aria-label="breadcrumb">
         <Link href="/platforms">
             Platforms
