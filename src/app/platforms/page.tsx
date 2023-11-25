@@ -20,14 +20,22 @@ interface PlatformsPageProps {
     platforms: string[];
     settedPlatform: string | null;
     reloadToggle: boolean;
+    pageError: string | null;
     fetchAvailablePlatforms: (token: string) => void;
     setPlatformForPromptsLoading: (platform: string) => void;
 }
 
 const PlatformsPage: React.FC<PlatformsPageProps> = props => {
     const router = useRouter();
-    const { token, platforms, settedPlatform, reloadToggle } = props;
+    const { token, platforms, settedPlatform, reloadToggle, pageError } = props;
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    useEffect(() => {
+        if(pageError) {
+            cookie.set("apiError", pageError);
+            window.location.replace("/login");
+        }
+    }, [pageError]);
 
     useEffect(() => {
         if(token) props.fetchAvailablePlatforms(token);
@@ -87,7 +95,8 @@ const mapStateToProps = (state: RootState) => {
         token: state.auth.token,
         platforms: state.platforms.platforms,
         settedPlatform: state.titles.platform,
-        reloadToggle: state.addPlatform.reloadPlatformsPageToggleFlag
+        reloadToggle: state.addPlatform.reloadPlatformsPageToggleFlag,
+        pageError: state.platforms.error,
     }
 }
 
