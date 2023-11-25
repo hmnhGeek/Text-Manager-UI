@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -10,21 +10,23 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import { RootState } from '@/redux/store';
+import { AppDispatch, RootState } from '@/redux/store';
 import { connect } from 'react-redux';
+import { logout } from '@/redux/actions/authActions';
+import { useRouter } from 'next/navigation';
+import cookie from 'js-cookie';
 
 interface HeaderProps {
     isAuthenticated: boolean;
+    token: string | null;
+    logout: (token: string) => void;
 }
 
 const Header: React.FC<HeaderProps> = props => {
-  let { isAuthenticated } = props;
-  const [auth, setAuth] = React.useState(true);
+  let { isAuthenticated, token, logout } = props;
+  const router = useRouter();
+  const [logoutButtonWasClicked, setLogoutButtonWasClicked] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAuth(event.target.checked);
-  };
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -33,6 +35,19 @@ const Header: React.FC<HeaderProps> = props => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const initiateLogout = () => {
+    setLogoutButtonWasClicked(true);
+    handleClose();
+    if(isAuthenticated && token) logout(token);
+  }
+
+  useEffect(() => {
+    if(token === null && !isAuthenticated && logoutButtonWasClicked) {
+        cookie.set("successMsg", "Logged out successfully!");
+        router.push("/login");
+    }
+  }, [token, isAuthenticated]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -77,7 +92,7 @@ const Header: React.FC<HeaderProps> = props => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={initiateLogout}>Log Out</MenuItem>
               </Menu>
             </div>
           )}
@@ -90,7 +105,14 @@ const Header: React.FC<HeaderProps> = props => {
 const mapStateToProps = (state: RootState) => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
+        token: state.auth.token,
     };
 }
 
-export default connect(mapStateToProps, null)(Header);
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        logout: (token: string) => dispatch(logout(token)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
