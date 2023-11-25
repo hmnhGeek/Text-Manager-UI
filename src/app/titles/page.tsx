@@ -16,23 +16,29 @@ interface TitlesPageProps {
     token: string | null;
     titles: TitlesType[];
     platform: string | null;
+    pageError: string | null;
     fetchAvailablePlatforms: (token: string) => void;
     fetchTitlesFromPlatform: (token: string, platform: string) => void;
 }
 
 const TitlesPage: React.FC<TitlesPageProps> = props => {
     const router = useRouter();
-    const { token, titles, platform } = props;
+    const { token, titles, platform, pageError } = props;
 
     useEffect(() => {
-        if(token && platform) props.fetchTitlesFromPlatform(token, platform);
+        if(pageError) {
+            cookie.set("apiError", pageError);
+            window.location.replace("/login");
+        }
+    }, [pageError]);
+
+    useEffect(() => {
+        if(token && platform) props.fetchTitlesFromPlatform(token, platform); 
         else {
             cookie.set("apiError", "Please prove your identity!");
             router.push("/login");
         }
     }, []);
-
-    useEffect(() => console.log(titles), [titles]);
 
     if(titles && titles.length > 0) {
         return (
@@ -58,7 +64,8 @@ const mapStateToProps = (state: RootState) => {
     return {
         token: state.auth.token,
         platform: state.titles.platform,
-        titles: state.titles.titles
+        titles: state.titles.titles,
+        pageError: state.titles.error,
     }
 }
 
