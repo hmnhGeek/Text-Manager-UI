@@ -3,9 +3,6 @@
 .gridContainer {
   margin: 0 auto;
   background-color: #fff; /* Set the background color to white */
-  padding: 20px; /* Add some padding to the container for spacing */
-  border-radius: 8px; /* Add rounded corners to the container */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
   height: 100vh;
 }
 

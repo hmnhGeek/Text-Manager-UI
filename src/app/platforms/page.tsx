@@ -14,6 +14,7 @@ import AddIcon from '@mui/icons-material/Add';
 import LayersIcon from '@mui/icons-material/Layers';
 import CustomModal from "../components/CustomModal/CustomModal";
 import AddPlatformForm from "../components/AddPlatformForm/AddPlatformForm";
+import { Toolbar } from "@mui/material";
 
 interface PlatformsPageProps {
     token: string | null;
@@ -59,6 +60,7 @@ const PlatformsPage: React.FC<PlatformsPageProps> = props => {
         return (
             <div className={styles.gridContainer}>
                 <h1>Available Platforms</h1>
+                <Toolbar />
                 <div className={styles.cardGrid}>
                     {platforms.map((platform) => (
                     <PlatformCard

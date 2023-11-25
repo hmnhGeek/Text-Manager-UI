@@ -51,7 +51,7 @@ const Header: React.FC<HeaderProps> = props => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed">
+      <AppBar>
         <Toolbar>
           <IconButton
             size="large"
@@ -91,6 +91,7 @@ const Header: React.FC<HeaderProps> = props => {
                 }}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
+                sx={{mt: '40px'}}
               >
                 <MenuItem onClick={initiateLogout}>Log Out</MenuItem>
               </Menu>
