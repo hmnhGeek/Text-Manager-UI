@@ -9,18 +9,20 @@ import toast, { Toaster } from 'react-hot-toast';
 import { login } from '@/redux/actions/authActions';
 import { RootState, AppDispatch } from '@/redux/store';
 import { connect } from 'react-redux';
+import { CircularProgress } from '@mui/material';
 
 interface LoginPageProps {
     token: string | null;
     isAuthenticated: boolean;
     loading: boolean;
     error: string | null;
+    loginInProgress: boolean;
     login: (credentials: { username: string; password: string }) => void;
 }
 
 const LoginPage: React.FC<LoginPageProps> = props => {
     const [formData, setFormData] = React.useState({username: "", password: ""});
-    const { token, isAuthenticated, loading, error } = props;
+    const { token, isAuthenticated, loading, error, loginInProgress } = props;
     const router = useRouter();
 
     useEffect(() => {
@@ -89,8 +91,10 @@ const LoginPage: React.FC<LoginPageProps> = props => {
                     
                 </form>
                 <button onClick={handleLogin} className={styles.submitButton}>
-                        Log In
-                    </button>
+                    {
+                        loginInProgress ? <CircularProgress style={{ color: 'white' }} size={20} /> : "Log In"
+                    }
+                </button>
                 <div className={styles.signupLink}>
                     Don't have an account? &nbsp;
                     <Link href="/signup" className={styles.formLink}>
@@ -109,6 +113,7 @@ const mapStateToProps = (state: RootState) => {
         isAuthenticated: state.auth.isAuthenticated,
         loading: state.auth.loading,
         error: state.auth.error,
+        loginInProgress: state.auth.loading,
     };
 };
   
