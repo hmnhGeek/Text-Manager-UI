@@ -33,15 +33,20 @@ export const login = (credentials: { username: string; password: string }) => {
   };
 };
 
-export const logout = () => {
+export const logout = (token: string) => {
   return async (dispatch: Dispatch) => {
     try {
       dispatch(logoutStart());
 
-      // Make the API call to log out
-      await api.post('/users/logout');
+      const headers = {
+        'accept': 'application/json',
+        'token': token,
+      };
 
-      dispatch(logoutSuccess());
+      const response = await api.post('/users/logout', {}, {headers});
+
+      if(response.data.status_code === 200) dispatch(logoutSuccess());
+      else dispatch(logoutFailure("Could not log out!"));
     } catch (error: any) {
       dispatch(logoutFailure(error.response.data.detail));
     }

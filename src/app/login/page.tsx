@@ -6,30 +6,37 @@ import Link from 'next/link';
 import styles from './login.module.css';
 import cookie from 'js-cookie';
 import toast, { Toaster } from 'react-hot-toast';
-import { login, logout } from '@/redux/actions/authActions';
+import { login } from '@/redux/actions/authActions';
 import { RootState, AppDispatch } from '@/redux/store';
 import { connect } from 'react-redux';
+import { CircularProgress } from '@mui/material';
 
 interface LoginPageProps {
     token: string | null;
     isAuthenticated: boolean;
     loading: boolean;
     error: string | null;
+    loginInProgress: boolean;
     login: (credentials: { username: string; password: string }) => void;
-    logout: () => void;
 }
 
 const LoginPage: React.FC<LoginPageProps> = props => {
     const [formData, setFormData] = React.useState({username: "", password: ""});
-    const { token, isAuthenticated, loading, error } = props;
+    const { token, isAuthenticated, loading, error, loginInProgress } = props;
     const router = useRouter();
 
     useEffect(() => {
         let apiError = cookie.get("apiError");
+        let successMsg = cookie.get("successMsg");
 
         if(apiError) {
             toast.error(apiError);
             cookie.remove("apiError");
+        }
+
+        if(successMsg) {
+            toast.success(successMsg);
+            cookie.remove("successMsg");
         }
     }, []);
 
@@ -84,8 +91,10 @@ const LoginPage: React.FC<LoginPageProps> = props => {
                     
                 </form>
                 <button onClick={handleLogin} className={styles.submitButton}>
-                        Log In
-                    </button>
+                    {
+                        loginInProgress ? <CircularProgress style={{ color: 'white' }} size={20} /> : "Log In"
+                    }
+                </button>
                 <div className={styles.signupLink}>
                     Don't have an account? &nbsp;
                     <Link href="/signup" className={styles.formLink}>
@@ -104,13 +113,13 @@ const mapStateToProps = (state: RootState) => {
         isAuthenticated: state.auth.isAuthenticated,
         loading: state.auth.loading,
         error: state.auth.error,
+        loginInProgress: state.auth.loading,
     };
 };
   
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         login: (credentials: { username: string; password: string }) => dispatch(login(credentials)),
-        logout: () => dispatch(logout()),
     };
 };
 
