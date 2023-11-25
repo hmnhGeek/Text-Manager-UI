@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { ReduxProvider } from '@/redux/ReduxProvider'
 import TokenExpirationChecker from './components/TokenExpirationChecker/TokenExpirationChecker'
+import Header from './components/Header/Header'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,6 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ReduxProvider>
+          <Header />
           <TokenExpirationChecker minutes={1} />
           {children}
         </ReduxProvider>
