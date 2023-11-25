@@ -53,3 +53,9 @@
     grid-template-columns: repeat(auto-fill, minmax(23%, 1fr));
   }
 }
+
+.custom-speed-dial {
+  position: fixed;
+  bottom: 16px; /* Adjust this value to set the distance from the bottom */
+  right: 16px; /* Adjust this value to set the distance from the right */
+}

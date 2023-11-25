@@ -9,18 +9,25 @@ import { RootState, AppDispatch } from "@/redux/store";
 import { connect } from "react-redux";
 import cookie from 'js-cookie';
 import { setPlatformForPromptsLoading } from "@/redux/actions/titlesActions";
+import CustomSppedDial from "../components/CustomSpeedDial/CustomSpeedDial";
+import AddIcon from '@mui/icons-material/Add';
+import LayersIcon from '@mui/icons-material/Layers';
+import CustomModal from "../components/CustomModal/CustomModal";
+import AddPlatformForm from "../components/AddPlatformForm/AddPlatformForm";
 
 interface PlatformsPageProps {
     token: string | null;
     platforms: string[];
     settedPlatform: string | null;
+    reloadToggle: boolean;
     fetchAvailablePlatforms: (token: string) => void;
     setPlatformForPromptsLoading: (platform: string) => void;
 }
 
 const PlatformsPage: React.FC<PlatformsPageProps> = props => {
     const router = useRouter();
-    const { token, platforms, settedPlatform } = props;
+    const { token, platforms, settedPlatform, reloadToggle } = props;
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         if(token) props.fetchAvailablePlatforms(token);
@@ -28,7 +35,7 @@ const PlatformsPage: React.FC<PlatformsPageProps> = props => {
             cookie.set("apiError", "Please prove your identity!");
             router.push("/login");
         }
-    }, []);
+    }, [reloadToggle]);
 
     useEffect(() => {
         if(settedPlatform) {
@@ -52,6 +59,22 @@ const PlatformsPage: React.FC<PlatformsPageProps> = props => {
                     />
                     ))}
                 </div>
+                <CustomSppedDial 
+                    className={styles['custom-speed-dial']} 
+                    actions={
+                        [
+                            {
+                                icon: <AddIcon />,
+                                name: "Add new platform",
+                                onClick: () => setIsModalOpen(true)
+                            }
+                        ]
+                    }
+                    speedDialIcon={<LayersIcon />}
+                />
+                <CustomModal title={"Add Platform"} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} >
+                    <AddPlatformForm />
+                </CustomModal>
             </div>
         );
     }
@@ -63,7 +86,8 @@ const mapStateToProps = (state: RootState) => {
     return {
         token: state.auth.token,
         platforms: state.platforms.platforms,
-        settedPlatform: state.titles.platform
+        settedPlatform: state.titles.platform,
+        reloadToggle: state.addPlatform.reloadPlatformsPageToggleFlag
     }
 }
 
