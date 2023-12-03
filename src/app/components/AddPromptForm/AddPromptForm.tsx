@@ -108,12 +108,11 @@ const AddPromptForm: React.FC<AddPromptFormProps> = props => {
                 <label className={styles.addlabel}>
                 Prompt:
                 <textarea
-                    // type="text"
                     value={formik.values.prompt}
                     name='prompt'
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className={`${styles.addinput} ${formik.touched.prompt && formik.errors.prompt ? styles.errorHighlight : ''}`}
+                    className={`${styles.promptTextArea} ${formik.touched.prompt && formik.errors.prompt ? styles.errorHighlight : ''}`}
                 />
                 {
                     formik.touched.prompt && formik.errors.prompt && (

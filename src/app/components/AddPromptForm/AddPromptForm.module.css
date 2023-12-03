@@ -54,3 +54,11 @@
   .errorHighlight {
     border: 2px solid #dc3545; /* Highlight color for errors, you can adjust this */
   }
+
+  .promptTextArea {
+    width: 260px;
+    height: 300px;
+    resize: vertical;
+    max-height: 450px;
+    min-height: 300px;
+  }
