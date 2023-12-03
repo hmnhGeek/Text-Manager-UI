@@ -9,6 +9,7 @@ export interface AddPlatfromState {
     error: string | null,
     response: PlatformObjectType | null,
     reloadPlatformsPageToggleFlag: boolean,
+    reloadTitlesPageToggleFlag: boolean,
 }
 
 export const addPlatformInitialState: AddPlatfromState = {
@@ -16,4 +17,5 @@ export const addPlatformInitialState: AddPlatfromState = {
     error: null,
     response: null,
     reloadPlatformsPageToggleFlag: false,
+    reloadTitlesPageToggleFlag: false,
 }
