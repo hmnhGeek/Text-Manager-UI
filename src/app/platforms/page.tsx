@@ -15,6 +15,7 @@ import LayersIcon from '@mui/icons-material/Layers';
 import CustomModal from "../components/CustomModal/CustomModal";
 import AddPlatformForm from "../components/AddPlatformForm/AddPlatformForm";
 import { Toolbar } from "@mui/material";
+import UnlockTitlesForm from "../components/UnlockTitlesForm/UnlockTitlesForm";
 
 interface PlatformsPageProps {
     token: string | null;
@@ -30,6 +31,8 @@ const PlatformsPage: React.FC<PlatformsPageProps> = props => {
     const router = useRouter();
     const { token, platforms, settedPlatform, reloadToggle, pageError } = props;
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isUnlockModalOpen, setIsUnlockModalOpen] = useState(false);
+    const [unlockKey, setUnlockKey] = useState<string | null>(null);
 
     useEffect(() => {
         if(pageError) {
@@ -47,49 +50,60 @@ const PlatformsPage: React.FC<PlatformsPageProps> = props => {
     }, [reloadToggle]);
 
     useEffect(() => {
-        if(settedPlatform) {
+        if(settedPlatform && unlockKey) {
+            cookie.set("unlockKey", unlockKey);
             router.push("/titles");
         }
-    }, [settedPlatform]);
+    }, [settedPlatform, unlockKey]);
 
     const setPlatform = (platform: string) => {
         props.setPlatformForPromptsLoading(platform);
     }
 
-    if(platforms && platforms.length > 0) {
-        return (
-            <div className={styles.gridContainer}>
-                <h1>Available Platforms</h1>
-                <Toolbar />
-                <div className={styles.cardGrid}>
-                    {platforms.map((platform) => (
-                    <PlatformCard
-                        content={platform}
-                        onClick={() => setPlatform(platform)}
-                    />
-                    ))}
-                </div>
-                <CustomSppedDial 
-                    className={styles['custom-speed-dial']} 
-                    actions={
-                        [
-                            {
-                                icon: <AddIcon />,
-                                name: "Add new platform",
-                                onClick: () => setIsModalOpen(true)
-                            }
-                        ]
-                    }
-                    speedDialIcon={<LayersIcon />}
-                />
-                <CustomModal title={"Add Platform"} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} >
-                    <AddPlatformForm />
-                </CustomModal>
-            </div>
-        );
+    const initiateDecrypt = (platform: string) => {
+        setIsUnlockModalOpen(true);
+        setPlatform(platform);
     }
     
-    return null;
+    return (
+        <>
+            {
+                platforms && platforms.length > 0 && (
+                    <div className={styles.gridContainer}>
+                        <h1>Available Platforms</h1>
+                        <Toolbar />
+                        <div className={styles.cardGrid}>
+                            {platforms.map((platform) => (
+                            <PlatformCard
+                                content={platform}
+                                onClick={() => initiateDecrypt(platform)}
+                            />
+                            ))}
+                        </div>
+                    </div>
+                )
+            }
+            <CustomSppedDial 
+                className={styles['custom-speed-dial']} 
+                actions={
+                    [
+                        {
+                            icon: <AddIcon />,
+                            name: "Add new platform",
+                            onClick: () => setIsModalOpen(true)
+                        }
+                    ]
+                }
+                speedDialIcon={<LayersIcon />}
+            />
+            <CustomModal title={"Add Platform"} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} >
+                <AddPlatformForm />
+            </CustomModal>
+            <CustomModal title={"Unlock Titles"} isOpen={isUnlockModalOpen} onClose={() => setIsUnlockModalOpen(false)}>
+                <UnlockTitlesForm platformName={settedPlatform} setUnlockKeyFn={setUnlockKey} />
+            </CustomModal>
+        </>
+    );
 }
 
 const mapStateToProps = (state: RootState) => {

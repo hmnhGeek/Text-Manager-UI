@@ -27,7 +27,7 @@ interface TitlesPageProps {
     reloadToggle: boolean;
     reloadAfterAddingPrompt: boolean;
     fetchAvailablePlatforms: (token: string) => void;
-    fetchTitlesFromPlatform: (token: string, platform: string) => void;
+    fetchTitlesFromPlatform: (token: string, platform: string, unlockKey: string) => void;
 }
 
 const TitlesPage: React.FC<TitlesPageProps> = props => {
@@ -44,7 +44,8 @@ const TitlesPage: React.FC<TitlesPageProps> = props => {
     }, [pageError]);
 
     useEffect(() => {
-        if(token && platform) props.fetchTitlesFromPlatform(token, platform); 
+        let unlockKey = cookie.get("unlockKey");
+        if(token && platform && unlockKey) props.fetchTitlesFromPlatform(token, platform, unlockKey); 
         else {
             cookie.set("apiError", "Please prove your identity!");
             router.push("/login");
@@ -109,7 +110,7 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         fetchAvailablePlatforms: (token: string) => dispatch(fetchAvailablePlatforms(token)),
-        fetchTitlesFromPlatform: (token: string, platform: string) => dispatch(fetchTitlesFromPlatform(token, platform)),
+        fetchTitlesFromPlatform: (token: string, platform: string, unlockKey: string) => dispatch(fetchTitlesFromPlatform(token, platform, unlockKey)),
     }
 }
 
