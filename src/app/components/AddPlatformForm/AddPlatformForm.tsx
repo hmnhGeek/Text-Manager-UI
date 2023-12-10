@@ -7,11 +7,13 @@ import { addPlatform } from '@/redux/actions/addPlatformActions';
 import { connect } from 'react-redux';
 import CircularProgress from '@mui/material/CircularProgress';
 import cookie from 'js-cookie';
+import SecureEncryptor from '@/app/encryptor/encryptor';
 
 const validationSchema = Yup.object(
   {
     platformName: Yup.string().required("Platform name is required!"),
-    title: Yup.string().required("Title is required!")
+    title: Yup.string().required("Title is required!"),
+    platformPwd: Yup.string().required("Password to encrypt platform data is required.")
   }
 );
 
@@ -27,11 +29,16 @@ const AddPlatformForm: React.FC<AddPlatformFormProps> = props => {
     {
       initialValues: {
         platformName: "",
-        title: ""
+        title: "",
+        platformPwd: "",
       },
       validationSchema: validationSchema,
       onSubmit: values => {
-        if (props.token) props.addPlatform(props.token, values);
+        values.title = (new SecureEncryptor(values.platformPwd)).encrypt(values.title);
+        if (props.token) props.addPlatform(props.token, {
+          platformName: values.platformName,
+          title: values.title
+        });
         formik.resetForm();
       }
     }
@@ -76,6 +83,22 @@ const AddPlatformForm: React.FC<AddPlatformFormProps> = props => {
           {
             formik.touched.title && formik.errors.title && (
               <div className={styles.error}>{formik.errors.title}</div>
+            )
+          }
+        </label>
+        <label className={styles.addlabel}>
+          Pass Key:
+          <input
+            type="password"
+            value={formik.values.platformPwd}
+            name='platformPwd'
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className={`${styles.addinput} ${formik.touched.platformPwd && formik.errors.platformPwd ? styles.errorHighlight : ''}`}
+          />
+          {
+            formik.touched.platformPwd && formik.errors.platformPwd && (
+              <div className={styles.error}>{formik.errors.platformPwd}</div>
             )
           }
         </label>

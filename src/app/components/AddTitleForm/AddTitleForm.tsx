@@ -7,6 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { AppDispatch, RootState } from '@/redux/store';
 import { addPlatform } from '@/redux/actions/addPlatformActions';
 import { connect } from 'react-redux';
+import SecureEncryptor from '@/app/encryptor/encryptor';
 
 const validationSchema = Yup.object(
     {
@@ -20,10 +21,13 @@ interface AddTitleFormProps {
     currentPlatform: string;
     submitInProgress: boolean;
     addPlatformError: string | null;
+    lockKey: string | null;
     addPlatform: (token: string, platformData: {platformName: string, title: string}) => void;
 }
 
 const AddTitleForm: React.FC<AddTitleFormProps> = props => {
+    let { lockKey } = props;
+    
     const formik = useFormik(
         {
             initialValues: {
@@ -32,7 +36,10 @@ const AddTitleForm: React.FC<AddTitleFormProps> = props => {
             },
             validationSchema: validationSchema,
             onSubmit: values => {
-                if(props.token) props.addPlatform(props.token, values);
+                if(props.token && lockKey) {
+                    values.title = (new SecureEncryptor(lockKey)).encrypt(values.title);
+                    props.addPlatform(props.token, values);
+                }
                 formik.resetForm();
             }
         }
@@ -77,6 +84,7 @@ const mapStateToProps = (state: RootState) => {
       token: state.auth.token,
       submitInProgress: state.addPlatform.loading,
       addPlatformError: state.addPlatform.error,
+      lockKey: state.encryption.key,
     };
 };
   

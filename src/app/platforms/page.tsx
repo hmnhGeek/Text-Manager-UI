@@ -15,6 +15,8 @@ import LayersIcon from '@mui/icons-material/Layers';
 import CustomModal from "../components/CustomModal/CustomModal";
 import AddPlatformForm from "../components/AddPlatformForm/AddPlatformForm";
 import { Toolbar } from "@mui/material";
+import UnlockTitlesForm from "../components/UnlockTitlesForm/UnlockTitlesForm";
+import { setEncryptionKey } from "@/redux/actions/encryptionActions";
 
 interface PlatformsPageProps {
     token: string | null;
@@ -22,14 +24,17 @@ interface PlatformsPageProps {
     settedPlatform: string | null;
     reloadToggle: boolean;
     pageError: string | null;
+    unlockKey: string | null;
     fetchAvailablePlatforms: (token: string) => void;
     setPlatformForPromptsLoading: (platform: string) => void;
+    setEncryptionKey: (key: string | null) => void;
 }
 
 const PlatformsPage: React.FC<PlatformsPageProps> = props => {
     const router = useRouter();
-    const { token, platforms, settedPlatform, reloadToggle, pageError } = props;
+    const { token, platforms, settedPlatform, reloadToggle, pageError, unlockKey } = props;
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isUnlockModalOpen, setIsUnlockModalOpen] = useState(false);
 
     useEffect(() => {
         if(pageError) {
@@ -47,49 +52,62 @@ const PlatformsPage: React.FC<PlatformsPageProps> = props => {
     }, [reloadToggle]);
 
     useEffect(() => {
-        if(settedPlatform) {
+        if(settedPlatform && unlockKey) {
             router.push("/titles");
         }
-    }, [settedPlatform]);
+    }, [settedPlatform, unlockKey]);
+
+    // ensure that encryption key is set to null on mount to avoid unnecessary redirects to /titles.
+    useEffect(() => props.setEncryptionKey(null), []);
 
     const setPlatform = (platform: string) => {
         props.setPlatformForPromptsLoading(platform);
     }
 
-    if(platforms && platforms.length > 0) {
-        return (
-            <div className={styles.gridContainer}>
-                <h1>Available Platforms</h1>
-                <Toolbar />
-                <div className={styles.cardGrid}>
-                    {platforms.map((platform) => (
-                    <PlatformCard
-                        content={platform}
-                        onClick={() => setPlatform(platform)}
-                    />
-                    ))}
-                </div>
-                <CustomSppedDial 
-                    className={styles['custom-speed-dial']} 
-                    actions={
-                        [
-                            {
-                                icon: <AddIcon />,
-                                name: "Add new platform",
-                                onClick: () => setIsModalOpen(true)
-                            }
-                        ]
-                    }
-                    speedDialIcon={<LayersIcon />}
-                />
-                <CustomModal title={"Add Platform"} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} >
-                    <AddPlatformForm />
-                </CustomModal>
-            </div>
-        );
+    const initiateDecrypt = (platform: string) => {
+        setIsUnlockModalOpen(true);
+        setPlatform(platform);
     }
     
-    return null;
+    return (
+        <>
+            {
+                platforms && platforms.length > 0 && (
+                    <div className={styles.gridContainer}>
+                        <h1>Available Platforms</h1>
+                        <Toolbar />
+                        <div className={styles.cardGrid}>
+                            {platforms.map((platform) => (
+                            <PlatformCard
+                                content={platform}
+                                onClick={() => initiateDecrypt(platform)}
+                            />
+                            ))}
+                        </div>
+                    </div>
+                )
+            }
+            <CustomSppedDial 
+                className={styles['custom-speed-dial']} 
+                actions={
+                    [
+                        {
+                            icon: <AddIcon />,
+                            name: "Add new platform",
+                            onClick: () => setIsModalOpen(true)
+                        }
+                    ]
+                }
+                speedDialIcon={<LayersIcon />}
+            />
+            <CustomModal title={"Add Platform"} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} >
+                <AddPlatformForm />
+            </CustomModal>
+            <CustomModal title={"Unlock Titles"} isOpen={isUnlockModalOpen} onClose={() => setIsUnlockModalOpen(false)}>
+                <UnlockTitlesForm />
+            </CustomModal>
+        </>
+    );
 }
 
 const mapStateToProps = (state: RootState) => {
@@ -99,6 +117,7 @@ const mapStateToProps = (state: RootState) => {
         settedPlatform: state.titles.platform,
         reloadToggle: state.addPlatform.reloadPlatformsPageToggleFlag,
         pageError: state.platforms.error,
+        unlockKey: state.encryption.key,
     }
 }
 
@@ -106,6 +125,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         fetchAvailablePlatforms: (token: string) => dispatch(fetchAvailablePlatforms(token)),
         setPlatformForPromptsLoading: (platform: string) => dispatch(setPlatformForPromptsLoading(platform)),
+        setEncryptionKey: (key: string | null) => dispatch(setEncryptionKey(key)),
     }
 }
 
