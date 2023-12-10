@@ -2,6 +2,9 @@ import React from 'react';
 import styles from './UnlockTitlesForm.module.css';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { setEncryptionKey } from '@/redux/actions/encryptionActions';
+import { AppDispatch } from '@/redux/store';
+import { connect } from 'react-redux';
 
 const validationSchema = Yup.object(
   {
@@ -10,8 +13,7 @@ const validationSchema = Yup.object(
 );
 
 interface UnlockTitlesFormProps {
-    platformName: string | null;
-    setUnlockKeyFn: (unlockKey: string) => void;
+    setEncryptionKey: (key: string) => void;
 }
 
 const UnlockTitlesForm: React.FC<UnlockTitlesFormProps> = props => {
@@ -22,7 +24,7 @@ const UnlockTitlesForm: React.FC<UnlockTitlesFormProps> = props => {
       },
       validationSchema: validationSchema,
       onSubmit: values => {
-        props.setUnlockKeyFn(values.platformPwd);
+        props.setEncryptionKey(values.platformPwd);
         formik.resetForm();
       }
     }
@@ -55,4 +57,10 @@ const UnlockTitlesForm: React.FC<UnlockTitlesFormProps> = props => {
   );
 };
 
-export default UnlockTitlesForm;
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+  return {
+    setEncryptionKey: (key: string) => dispatch(setEncryptionKey(key)),
+  };
+}
+
+export default connect(null, mapDispatchToProps)(UnlockTitlesForm);

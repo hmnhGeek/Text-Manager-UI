@@ -26,13 +26,14 @@ interface TitlesPageProps {
     pageError: string | null;
     reloadToggle: boolean;
     reloadAfterAddingPrompt: boolean;
+    unlockKey: string | null;
     fetchAvailablePlatforms: (token: string) => void;
     fetchTitlesFromPlatform: (token: string, platform: string, unlockKey: string) => void;
 }
 
 const TitlesPage: React.FC<TitlesPageProps> = props => {
     const router = useRouter();
-    const { token, titles, platform, pageError, reloadToggle, reloadAfterAddingPrompt } = props;
+    const { token, titles, platform, pageError, reloadToggle, reloadAfterAddingPrompt, unlockKey } = props;
     const [isAddTitleModalOpen, setIsAddTitleModalOpen] = useState(false);
     const [isAddPromptModalOpen, setIsAddPromptModalOpen] = useState(false);
 
@@ -44,7 +45,6 @@ const TitlesPage: React.FC<TitlesPageProps> = props => {
     }, [pageError]);
 
     useEffect(() => {
-        let unlockKey = cookie.get("unlockKey");
         if(token && platform && unlockKey) props.fetchTitlesFromPlatform(token, platform, unlockKey); 
         else {
             cookie.set("apiError", "Please prove your identity!");
@@ -104,6 +104,7 @@ const mapStateToProps = (state: RootState) => {
         pageError: state.titles.error,
         reloadToggle: state.addPlatform.reloadPlatformsPageToggleFlag,
         reloadAfterAddingPrompt: state.addPrompt.reloadTitlesPageToggleFlag,
+        unlockKey: state.encryption.key,
     }
 }
 

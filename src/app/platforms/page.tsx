@@ -16,6 +16,7 @@ import CustomModal from "../components/CustomModal/CustomModal";
 import AddPlatformForm from "../components/AddPlatformForm/AddPlatformForm";
 import { Toolbar } from "@mui/material";
 import UnlockTitlesForm from "../components/UnlockTitlesForm/UnlockTitlesForm";
+import { setEncryptionKey } from "@/redux/actions/encryptionActions";
 
 interface PlatformsPageProps {
     token: string | null;
@@ -23,16 +24,17 @@ interface PlatformsPageProps {
     settedPlatform: string | null;
     reloadToggle: boolean;
     pageError: string | null;
+    unlockKey: string | null;
     fetchAvailablePlatforms: (token: string) => void;
     setPlatformForPromptsLoading: (platform: string) => void;
+    setEncryptionKey: (key: string | null) => void;
 }
 
 const PlatformsPage: React.FC<PlatformsPageProps> = props => {
     const router = useRouter();
-    const { token, platforms, settedPlatform, reloadToggle, pageError } = props;
+    const { token, platforms, settedPlatform, reloadToggle, pageError, unlockKey } = props;
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isUnlockModalOpen, setIsUnlockModalOpen] = useState(false);
-    const [unlockKey, setUnlockKey] = useState<string | null>(null);
 
     useEffect(() => {
         if(pageError) {
@@ -51,10 +53,12 @@ const PlatformsPage: React.FC<PlatformsPageProps> = props => {
 
     useEffect(() => {
         if(settedPlatform && unlockKey) {
-            cookie.set("unlockKey", unlockKey);
             router.push("/titles");
         }
     }, [settedPlatform, unlockKey]);
+
+    // ensure that encryption key is set to null on mount to avoid unnecessary redirects to /titles.
+    useEffect(() => props.setEncryptionKey(null), []);
 
     const setPlatform = (platform: string) => {
         props.setPlatformForPromptsLoading(platform);
@@ -100,7 +104,7 @@ const PlatformsPage: React.FC<PlatformsPageProps> = props => {
                 <AddPlatformForm />
             </CustomModal>
             <CustomModal title={"Unlock Titles"} isOpen={isUnlockModalOpen} onClose={() => setIsUnlockModalOpen(false)}>
-                <UnlockTitlesForm platformName={settedPlatform} setUnlockKeyFn={setUnlockKey} />
+                <UnlockTitlesForm />
             </CustomModal>
         </>
     );
@@ -113,6 +117,7 @@ const mapStateToProps = (state: RootState) => {
         settedPlatform: state.titles.platform,
         reloadToggle: state.addPlatform.reloadPlatformsPageToggleFlag,
         pageError: state.platforms.error,
+        unlockKey: state.encryption.key,
     }
 }
 
@@ -120,6 +125,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         fetchAvailablePlatforms: (token: string) => dispatch(fetchAvailablePlatforms(token)),
         setPlatformForPromptsLoading: (platform: string) => dispatch(setPlatformForPromptsLoading(platform)),
+        setEncryptionKey: (key: string | null) => dispatch(setEncryptionKey(key)),
     }
 }
 

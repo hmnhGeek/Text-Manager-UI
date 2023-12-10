@@ -21,10 +21,13 @@ interface AddTitleFormProps {
     currentPlatform: string;
     submitInProgress: boolean;
     addPlatformError: string | null;
+    lockKey: string | null;
     addPlatform: (token: string, platformData: {platformName: string, title: string}) => void;
 }
 
 const AddTitleForm: React.FC<AddTitleFormProps> = props => {
+    let { lockKey } = props;
+    
     const formik = useFormik(
         {
             initialValues: {
@@ -33,7 +36,6 @@ const AddTitleForm: React.FC<AddTitleFormProps> = props => {
             },
             validationSchema: validationSchema,
             onSubmit: values => {
-                let lockKey = cookie.get("unlockKey");
                 if(props.token && lockKey) {
                     values.title = (new SecureEncryptor(lockKey)).encrypt(values.title);
                     props.addPlatform(props.token, values);
@@ -82,6 +84,7 @@ const mapStateToProps = (state: RootState) => {
       token: state.auth.token,
       submitInProgress: state.addPlatform.loading,
       addPlatformError: state.addPlatform.error,
+      lockKey: state.encryption.key,
     };
 };
   

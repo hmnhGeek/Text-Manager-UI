@@ -7,6 +7,7 @@ import platformsReducer from './reducers/platformsReducer';
 import titlesReducer from './reducers/titlesReducer';
 import addPlatformReducer from './reducers/addPlatformReducer';
 import addPromptReducer from './reducers/addPromptReducer';
+import encryptionReducer from './reducers/encryptionReducer';
 
 // Custom Store type to include Dispatch with RootAction
 export interface CustomStore {
@@ -20,6 +21,7 @@ const store = configureStore({
     titles: titlesReducer,
     addPlatform: addPlatformReducer,
     addPrompt: addPromptReducer,
+    encryption: encryptionReducer,
     // Add other slices if needed
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk as ThunkMiddleware),
