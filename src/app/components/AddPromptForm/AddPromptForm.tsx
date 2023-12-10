@@ -39,7 +39,7 @@ interface AddPromptFormProps {
     submitInProgress: boolean;
     addPromptError: PromptObjectResponseType | null;
     allAvailableTitles: string[];
-    addPrompt: (token: string, promptData: {platformUrl: string, title: string, prompt: string}) => void;
+    addPrompt: (token: string, promptData: {platformUrl: string, title: string, prompt: string}, lockKey: string) => void;
 }
 
 const AddPromptForm: React.FC<AddPromptFormProps> = props => {
@@ -54,7 +54,8 @@ const AddPromptForm: React.FC<AddPromptFormProps> = props => {
             },
             validationSchema: validationSchema,
             onSubmit: values => {
-                if(props.token) props.addPrompt(props.token, values);
+                let lockKey = cookie.get("unlockKey");
+                if(props.token && lockKey) props.addPrompt(props.token, values, lockKey);
                 formik.resetForm();
             }
         }
@@ -138,7 +139,7 @@ const mapStateToProps = (state: RootState) => {
   
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
-      addPrompt: (token: string, promptData: {platformUrl: string, title: string, prompt: string}) => dispatch(addPrompt(token, promptData)),
+      addPrompt: (token: string, promptData: {platformUrl: string, title: string, prompt: string}, lockKey: string) => dispatch(addPrompt(token, promptData, lockKey)),
     };
 }
 

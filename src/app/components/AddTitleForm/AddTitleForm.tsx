@@ -7,6 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { AppDispatch, RootState } from '@/redux/store';
 import { addPlatform } from '@/redux/actions/addPlatformActions';
 import { connect } from 'react-redux';
+import SecureEncryptor from '@/app/encryptor/encryptor';
 
 const validationSchema = Yup.object(
     {
@@ -32,7 +33,11 @@ const AddTitleForm: React.FC<AddTitleFormProps> = props => {
             },
             validationSchema: validationSchema,
             onSubmit: values => {
-                if(props.token) props.addPlatform(props.token, values);
+                let lockKey = cookie.get("unlockKey");
+                if(props.token && lockKey) {
+                    values.title = (new SecureEncryptor(lockKey)).encrypt(values.title);
+                    props.addPlatform(props.token, values);
+                }
                 formik.resetForm();
             }
         }

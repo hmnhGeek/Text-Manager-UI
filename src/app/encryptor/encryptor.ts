@@ -1,5 +1,3 @@
-import * as CryptoJS from 'crypto-js';
-
 class SecureEncryptor {
   private key: string;
 
@@ -7,14 +5,46 @@ class SecureEncryptor {
     this.key = key;
   }
 
-  encrypt(text: string): string {
-    const encryptedText = CryptoJS.AES.encrypt(text, this.key).toString();
-    return encryptedText;
+  private applyKey(text: string, operation: 'encrypt' | 'decrypt'): string {
+    let result = '';
+    const keyLen = this.key.length;
+
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+
+      if (char.match(/[a-zA-Z]/)) {
+        const keyChar = this.key[i % keyLen];
+        const keyShift = keyChar.charCodeAt(0);
+
+        let start: number;
+        if (char === char.toLowerCase()) {
+          start = 'a'.charCodeAt(0);
+        } else {
+          start = 'A'.charCodeAt(0);
+        }
+
+        let shiftedChar: string;
+        if (operation === 'encrypt') {
+          shiftedChar = String.fromCharCode(((char.charCodeAt(0) - start + keyShift) % 26) + start);
+        } else {
+          shiftedChar = String.fromCharCode(((char.charCodeAt(0) - start - keyShift + 26) % 26 + 26) % 26 + start);
+        }
+
+        result += shiftedChar;
+      } else {
+        result += char;
+      }
+    }
+
+    return result;
   }
 
-  decrypt(encryptedText: string): string {
-    const decryptedText = CryptoJS.AES.decrypt(encryptedText, this.key).toString(CryptoJS.enc.Utf8);
-    return decryptedText;
+  encrypt(text: string): string {
+    return this.applyKey(text, 'encrypt');
+  }
+
+  decrypt(text: string): string {
+    return this.applyKey(text, 'decrypt');
   }
 }
 
