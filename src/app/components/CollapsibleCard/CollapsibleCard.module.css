@@ -11,4 +11,5 @@
 
 .collapsible-list-item {
   margin-left: 20px; /* Add left margin for indentation */
+  cursor: pointer;
 }

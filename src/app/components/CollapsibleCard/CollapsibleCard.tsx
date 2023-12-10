@@ -25,7 +25,11 @@ const CollapsibleCard: React.FC<AccordionProps> = ({ title, prompts }) => {
           <Typography>
             <ul className={styles['collapsible-list']}>
               {prompts.map((prompt, index) => (
-                <li key={index} className={styles['collapsible-list-item']}>{prompt}</li>
+                <li 
+                  key={index} 
+                  onClick={() => navigator.clipboard.writeText(prompt)} 
+                  className={styles['collapsible-list-item']}
+                >{prompt}</li>
               ))}
             </ul>
           </Typography>
