@@ -1,4 +1,4 @@
-import { ADD_PLATFORM, ADD_PLATFORM_ERROR, ADD_PLATFORM_SUCCESS, AddPlatformActionsTypes, RELOAD_PLATFORMS_PAGE } from "../constants/addPlatformConstants";
+import { ADD_PLATFORM, ADD_PLATFORM_ERROR, ADD_PLATFORM_SUCCESS, AddPlatformActionsTypes, RELOAD_PLATFORMS_PAGE, RELOAD_TITLES_PAGE } from "../constants/addPlatformConstants";
 import { AddPlatfromState, addPlatformInitialState } from "../initialStates/addPlatformInitialState";
 
 const addPlatformReducer = (state: AddPlatfromState = addPlatformInitialState, action: AddPlatformActionsTypes) => {
@@ -11,6 +11,8 @@ const addPlatformReducer = (state: AddPlatfromState = addPlatformInitialState, a
             return { ...state, loading: false, response: null, error: action.payload };
         case RELOAD_PLATFORMS_PAGE:
             return { ...state, loading: false, response: null, error: null, reloadPlatformsPageToggleFlag: !state.reloadPlatformsPageToggleFlag };
+        case RELOAD_TITLES_PAGE:
+            return { ...state, loading: false, response: null, error: null, reloadTitlesPageToggleFlag: !state.reloadTitlesPageToggleFlag };
         default:
             return state;
     }
